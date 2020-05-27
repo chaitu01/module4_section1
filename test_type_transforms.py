@@ -22,5 +22,33 @@ def test__import_kwargs():
     assert typetransformdata.success_count != 100
 
 def test_is_my_type():
-    srs = pd.Series([])
-    assert
+    test_df = pd.read_csv('covid_data.csv')
+    type_series =
+    index = 0
+    for col in test_df:
+        srs = test_df[col]
+        true_count = 0
+        boolean_object = BooleanTransformedData(srs)
+        if boolean_object.is_my_type() == True:
+            true_count +=1
+            series_type = boolean_object.data_type
+        numeric_object = NumericTransformedData(srs)
+        if numeric_object.is_my_type() == True:
+            true_count +=1
+            series_type = numeric_object.data_type
+        category_object = CategoryTransformedData(srs)
+        if category_object.is_my_type() == True:
+            true_count +=1
+            series_type = category_object.data_type
+        datetime_object = DateTimeTransformedData(srs)
+        if datetime_object.is_my_type() == True:
+            true_count +=1
+            series_type = datetime_object.data_type
+        if true_count == 0:
+            string_object = StringTransformedData(srs)
+            if string_object.is_my_type() == True:
+                series_type = string_object.data_type
+                true_count +=1
+        index +=1
+        assert type_series[index] == series_type
+        assert true_count == 1
