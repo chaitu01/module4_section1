@@ -23,4 +23,4 @@ def test__import_kwargs():
 
 def test_is_my_type():
     srs = pd.Series([])
-    assert True
+    assert
