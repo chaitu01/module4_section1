@@ -22,9 +22,9 @@ def test__import_kwargs():
     assert typetransformdata.success_count != 100
 
 def test_is_my_type():
-    test_df = pd.read_csv('covid_data.csv')
-    type_series =
-    index = 0
+    test_df = pd.read_csv('datasets_311_673_survey.csv')
+    actual_type_list =[8,2,5,4,4,1,1,1,5,4,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,1,4]
+    index = -1
     for col in test_df:
         srs = test_df[col]
         true_count = 0
@@ -44,11 +44,13 @@ def test_is_my_type():
         if datetime_object.is_my_type() == True:
             true_count +=1
             series_type = datetime_object.data_type
+            return(datetime_object.percentage)
         if true_count == 0:
             string_object = StringTransformedData(srs)
             if string_object.is_my_type() == True:
                 series_type = string_object.data_type
                 true_count +=1
         index +=1
-        assert type_series[index] == series_type
+        print(index)
+        assert actual_type_list[index] == series_type
         assert true_count == 1

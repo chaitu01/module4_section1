@@ -129,7 +129,7 @@ class NumericTransformedData(TypeTransformedData):
         for value in self.srs:
             if type(value) == float:
                 float_count +=1
-        if (float_count/self.srs.size) >= 0.2:
+        if (float_count/self.srs.size) >= 0.10:
             convert_to_type = float
 
         for index, value in self.srs.items():
@@ -155,7 +155,8 @@ class NumericTransformedData(TypeTransformedData):
                             value = float(Fraction(value))
                             if convert_to_type == int:
                                 self.srs_out.loc[index] = int(value)
-                            self.srs_out.loc[index] = value
+                            else:
+                                self.srs_out.loc[index] = value
                             self.success_count +=1
                             continue
                         except:
@@ -287,8 +288,7 @@ class DateTimeTransformedData(TypeTransformedData):
                 try:
                     value = parse(value)
                     value = value.strftime('%d/%m/%Y %H:%M:%S')
-                    value = dateime.dateime.strptime(value,
-                                                         '%d/%m/%Y %H:%M:%S')
+                    value = datetime.datetime.strptime(value, '%d/%m/%Y %H:%M:%S')
                     self.success_count +=1
                     self.srs_out.loc[index] = value
                 except:
