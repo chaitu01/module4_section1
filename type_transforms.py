@@ -78,8 +78,10 @@ class BooleanTransformedData(TypeTransformedData):
         """
         self.success_count = 0
         self.srs_out = self.srs
+        null_count = 0
         for index, value in self.srs.items():
             if pd.isnull(value):
+                null_count +=1
                 continue
             if type(value) == str:
                 value = str.lower(value)
@@ -91,7 +93,7 @@ class BooleanTransformedData(TypeTransformedData):
                 self.success_count += 1
             self.srs_out.loc[index] = value
 
-        self.percentage = (self.success_count/self.srs_out.size)*100
+        self.percentage = (self.success_count/(self.srs_out.size - null_count))*100
         if self.percentage >= self.threshold:
             self.data_type = 1
             return True
@@ -126,6 +128,7 @@ class NumericTransformedData(TypeTransformedData):
         self.srs_out = self.srs
         float_count = 0
         convert_to_type = int
+        null_count = 0
         for value in self.srs:
             if type(value) == float:
                 float_count +=1
@@ -134,12 +137,15 @@ class NumericTransformedData(TypeTransformedData):
 
         for index, value in self.srs.items():
             if pd.isnull(value):
+                null_count +=1
                 continue
-            if type(value) == int and convert_to_type == float:
-                self.srs_out.loc[index] = float(value)
+            if type(value) == int:
+                if convert_to_type == float:
+                    self.srs_out.loc[index] = float(value)
                 self.success_count +=1
-            elif type(value) == float and convert_to_type == int:
-                self.srs_out.loc[index] = int(value)
+            elif type(value) == float:
+                if convert_to_type == int:
+                    self.srs_out.loc[index] = int(value)
                 self.success_count +=1
             elif type(value) == str:
                 value = value.strip()
@@ -170,11 +176,7 @@ class NumericTransformedData(TypeTransformedData):
                         continue
                 self.srs_out.loc[index] = value
                 self.success_count += 1
-
-
-
-
-        self.percentage = (self.success_count/self.srs_out.size)*100
+        self.percentage = (self.success_count/(self.srs_out.size - null_count))*100
         if self.percentage >= self.threshold:
             if convert_to_type == float:
                 self.data_type = 3
@@ -207,8 +209,10 @@ class CategoryTransformedData(TypeTransformedData):
         """
         self.success_count = 0
         self.srs_out = self.srs
+        null_count = 0
         for index, value in self.srs.items():
             if pd.isnull(value):
+                null_count +=1
                 continue
             if type(value) == int:
                 self.srs_out.loc[index] = str(float(value))
@@ -216,15 +220,16 @@ class CategoryTransformedData(TypeTransformedData):
             elif type(value) == float:
                 self.srs_out.loc[index] = str(value)
                 self.success_count +=1
-            if type(value) == str:
+            elif type(value) == str:
                 value = value.strip()
                 try:
                     self.srs_out.loc[index] = str(float(value))
                     self.success_count +=1
                 except:
                     self.srs_out.loc[index] = value
+                    self.success_count +=1
         if self.srs_out.unique().size <= self.category_threshold:
-            self.percentage = (self.success_count/self.srs_out.size)*100
+            self.percentage = (self.success_count/(self.srs_out.size - null_count))*100
             if self.percentage >= self.threshold:
                 self.data_type = 5
                 return True
@@ -271,8 +276,10 @@ class DateTimeTransformedData(TypeTransformedData):
         date_format_count = 0
         short_time_format_count = 0
         short_date_time_format_count = 0
+        null_count = 0
         for index, value in self.srs.items():
             if pd.isnull(value):
+                null_count +=1
                 continue
             if type(value) == datetime.datetime:
                 datetime_format_count +=1
@@ -294,7 +301,7 @@ class DateTimeTransformedData(TypeTransformedData):
                 except:
                     pass
 
-        self.percentage = (self.success_count/self.srs_out.size)*100
+        self.percentage = (self.success_count/(self.srs_out.size - null_count))*100
         if self.percentage >= self.threshold:
             self.data_type = 8
             return True
@@ -317,8 +324,10 @@ class StringTransformedData(TypeTransformedData):
         """
         self.success_count = 0
         self.srs_out = self.srs
+        null_count = 0
         for index, value in self.srs.items():
             if pd.isnull(value):
+                null_count +=1
                 continue
             if type(value) == str:
                 value = value.strip()
@@ -332,7 +341,7 @@ class StringTransformedData(TypeTransformedData):
                     continue
             self.srs_out.loc[index] = value
 
-        self.percentage = (self.success_count/self.srs_out.size)*100
+        self.percentage = (self.success_count/(self.srs_out.size - null_count))*100
         if self.percentage >= self.threshold:
             self.data_type = 4
             return True

@@ -23,28 +23,31 @@ def test__import_kwargs():
 
 def test_is_my_type():
     test_df = pd.read_csv('datasets_311_673_survey.csv')
-    actual_type_list =[8,2,5,4,4,1,1,1,5,4,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,1,4]
+    actual_type_list =[8,2,4,4,4,1,1,1,5,5,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,1,4]
     index = -1
     for col in test_df:
         srs = test_df[col]
         true_count = 0
+        series_type = 0
         boolean_object = BooleanTransformedData(srs)
         if boolean_object.is_my_type() == True:
             true_count +=1
             series_type = boolean_object.data_type
-        numeric_object = NumericTransformedData(srs)
-        if numeric_object.is_my_type() == True:
-            true_count +=1
-            series_type = numeric_object.data_type
-        category_object = CategoryTransformedData(srs)
-        if category_object.is_my_type() == True:
-            true_count +=1
-            series_type = category_object.data_type
-        datetime_object = DateTimeTransformedData(srs)
-        if datetime_object.is_my_type() == True:
-            true_count +=1
-            series_type = datetime_object.data_type
-            return(datetime_object.percentage)
+        if true_count == 0:
+            numeric_object = NumericTransformedData(srs)
+            if numeric_object.is_my_type() == True:
+                true_count +=1
+                series_type = numeric_object.data_type
+        if true_count == 0:
+            category_object = CategoryTransformedData(srs)
+            if category_object.is_my_type() == True:
+                true_count +=1
+                series_type = category_object.data_type
+        if true_count == 0:
+            datetime_object = DateTimeTransformedData(srs)
+            if datetime_object.is_my_type() == True:
+                true_count +=1
+                series_type = datetime_object.data_type
         if true_count == 0:
             string_object = StringTransformedData(srs)
             if string_object.is_my_type() == True:
