@@ -23,7 +23,7 @@ def test__import_kwargs():
 
 def test_is_my_type():
     test_df = pd.read_csv('datasets_311_673_survey.csv')
-    actual_type_list =[8,2,4,4,4,1,1,1,5,5,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,1,4]
+    actual_type_list =[8,2,4,4,4,1,1,1,5,5,1,1,5,5,1,5,5,5,5,5,5,5,1,5,5,1,4,]
     index = -1
     for col in test_df:
         srs = test_df[col]
@@ -54,6 +54,5 @@ def test_is_my_type():
                 series_type = string_object.data_type
                 true_count +=1
         index +=1
-        print(index)
         assert actual_type_list[index] == series_type
         assert true_count == 1

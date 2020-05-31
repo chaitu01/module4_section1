@@ -220,8 +220,7 @@ class CategoryTransformedData(TypeTransformedData):
             elif type(value) == float:
                 self.srs_out.loc[index] = str(value)
                 self.success_count +=1
-            elif type(value) == str:
-                value = value.strip()
+            else:
                 try:
                     self.srs_out.loc[index] = str(float(value))
                     self.success_count +=1
