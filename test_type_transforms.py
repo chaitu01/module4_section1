@@ -22,11 +22,13 @@ def test__import_kwargs():
     assert typetransformdata.success_count != 100
 
 def test_is_my_type():
-    test_df = pd.read_csv('datasets_311_673_survey.csv')
-    actual_type_list =[8,2,4,4,4,1,1,1,5,5,1,1,5,5,1,5,5,5,5,5,5,5,1,5,5,1,4,]
-    index = -1
-    for col in test_df:
-        srs = test_df[col]
+    test_df1 = pd.read_csv('datasets_311_673_survey.csv')
+    test_df2 = pd.read_csv("datasets_1980_3398_oasis_cross-sectional.csv")
+    dataset1_type_list = [8,2,4,4,4,1,1,1,5,5,1,1,5,5,1,5,5,5,5,5,5,5,1,5,5,1,4]
+    dataset2_type_list = [4,5,5,2,3,3,3,1,2,3,3,3]
+    [4, 5, 5, 2, 3, 3, 3, 1, 2, 3, 3, 3]
+    def type_test(col):
+        srs = col
         true_count = 0
         series_type = 0
         boolean_object = BooleanTransformedData(srs)
@@ -43,6 +45,7 @@ def test_is_my_type():
             if category_object.is_my_type() == True:
                 true_count +=1
                 series_type = category_object.data_type
+            print(category_object.srs_out.unique().size)
         if true_count == 0:
             datetime_object = DateTimeTransformedData(srs)
             if datetime_object.is_my_type() == True:
@@ -53,6 +56,9 @@ def test_is_my_type():
             if string_object.is_my_type() == True:
                 series_type = string_object.data_type
                 true_count +=1
-        index +=1
-        assert actual_type_list[index] == series_type
-        assert true_count == 1
+        return series_type
+    test1_type_list=list(test_df1.apply(type_test))
+    test2_type_list=list(test_df2.apply(type_test))
+    print(test2_type_list)
+    assert test1_type_list == dataset1_type_list
+    assert test2_type_list == dataset2_type_list
