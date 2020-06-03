@@ -24,9 +24,12 @@ def test__import_kwargs():
 def test_is_my_type():
     test_df1 = pd.read_csv('datasets_311_673_survey.csv')
     test_df2 = pd.read_csv("datasets_1980_3398_oasis_cross-sectional.csv")
+    test_df3 = pd.read_csv("datasets_646598_1162286_udemy_courses.csv")
+    test_df4 = pd.read_csv("AB_NYC_2019.csv")
     dataset1_type_list = [8,2,4,4,4,1,1,1,5,5,1,1,5,5,1,5,5,5,5,5,5,5,1,5,5,1,4]
     dataset2_type_list = [4,5,5,2,3,3,3,1,2,3,3,3]
-    [4, 5, 5, 2, 3, 3, 3, 1, 2, 3, 3, 3]
+    dataset3_type_list = [2,4,4,1,2,2,2,2,5,3,8,5]
+    dataset4_type_list = [2,4,2,4,5,4,3,3,5,2,2,2,8,3,2,2]
     def type_test(col):
         srs = col
         true_count = 0
@@ -58,6 +61,10 @@ def test_is_my_type():
         return series_type
     test1_type_list=list(test_df1.apply(type_test))
     test2_type_list=list(test_df2.apply(type_test))
-    print(test2_type_list)
+    test3_type_list = list(test_df3.apply(type_test))
+    test4_type_list = list(test_df4.apply(type_test))
+    print(test4_type_list)
     assert test1_type_list == dataset1_type_list
     assert test2_type_list == dataset2_type_list
+    assert test3_type_list == dataset3_type_list
+    assert test4_type_list == dataset4_type_list

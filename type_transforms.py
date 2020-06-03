@@ -129,9 +129,7 @@ class NumericTransformedData(TypeTransformedData):
         float_count = 0
         convert_to_type = int
         self.null_count = 0
-        for value in self.srs:
-            if type(value) == float:
-                float_count +=1
+        float_count = pd.Series(filter(lambda x:type(x) == float, self.srs)).size
         if (float_count/self.srs.size) >= 0.10:
             convert_to_type = float
 
