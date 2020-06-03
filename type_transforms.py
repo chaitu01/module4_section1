@@ -238,6 +238,12 @@ class CategoryTransformedData(TypeTransformedData):
 
 
 class DateTimeTransformedData(TypeTransformedData):
+    null_count = 0
+    time_format_count = 0
+    datetime_format_count = 0
+    date_format_count = 0
+    short_time_format_count = 0
+    short_date_time_format_count = 0
 
     def __init__(self, srs: pd.Series, run: bool = True, **kwargs):
         self.original_format: float = None
@@ -266,20 +272,20 @@ class DateTimeTransformedData(TypeTransformedData):
         """
         self.success_count = 0
         self.srs_out = self.srs
-        time_format_count = 0
-        datetime_format_count = 0
-        date_format_count = 0
-        short_time_format_count = 0
-        short_date_time_format_count = 0
-        null_count = 0
-        for index, value in self.srs.items():
+        self.time_format_count = 0
+        self.datetime_format_count = 0
+        self.date_format_count = 0
+        self.short_time_format_count = 0
+        self.short_date_time_format_count = 0
+        self.null_count = 0
+        def identify_type(value):
             if pd.isnull(value):
-                null_count +=1
-                continue
+                self.null_count +=1
+                return
             if type(value) == datetime.datetime:
                 datetime_format_count +=1
                 self.success_count +=1
-                continue
+                return
             else:
                 if type(value) == datetime.time:
                     time_format_count +=1
@@ -292,11 +298,11 @@ class DateTimeTransformedData(TypeTransformedData):
                     value = value.strftime('%d/%m/%Y %H:%M:%S')
                     value = datetime.datetime.strptime(value, '%d/%m/%Y %H:%M:%S')
                     self.success_count +=1
-                    self.srs_out.loc[index] = value
+                    value = value
                 except:
                     pass
-
-        self.percentage = (self.success_count/(self.srs_out.size - null_count))*100
+        self.srs_out = self.srs.apply(identify_type)
+        self.percentage = (self.success_count/(self.srs_out.size - self.null_count))*100
         if self.percentage >= self.threshold:
             self.data_type = 8
             return True

@@ -45,7 +45,6 @@ def test_is_my_type():
             if category_object.is_my_type() == True:
                 true_count +=1
                 series_type = category_object.data_type
-            print(category_object.srs_out.unique().size)
         if true_count == 0:
             datetime_object = DateTimeTransformedData(srs)
             if datetime_object.is_my_type() == True:
